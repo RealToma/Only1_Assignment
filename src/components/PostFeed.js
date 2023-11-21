@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useInfiniteQuery } from "react-query";
 import PostSkeleton from "./PostSkeleton";
 import Post from "./Post";
@@ -17,30 +17,56 @@ const fetchPosts = async (key, nextPage = 0) => {
 };
 
 export default function PostFeed() {
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    "posts",
-    fetchPosts,
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage.hasNextPage ? lastPage.nextPage : null,
-    }
-  );
+  const {
+    data,
+    fetchNextPage,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = useInfiniteQuery("posts", fetchPosts, {
+    getNextPageParam: (lastPage) =>
+      // lastPage.hasNextPage ? lastPage.nextPage : null,
+      lastPage.length === PAGE_SIZE ? lastPage[lastPage.length - 1].id : null,
+  });
+
+  const postFeedRef = useRef(null);
 
   const handleScroll = (event) => {
     const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight && hasNextPage) {
+    console.log("event.currentTarget:", event.currentTarget);
+    console.log("isFetchingNextPage:", isFetchingNextPage);
+    console.log(
+      " postFeedRef.current.scrollHeight:",
+      postFeedRef.current.scrollHeight
+    );
+    console.log("hasNextPage:", hasNextPage);
+    console.log(
+      "postFeedRef.current.scrollTop + postFeedRef.current.clientHeight:",
+      postFeedRef.current.scrollTop + postFeedRef.current.clientHeight
+    );
+
+    if (
+      postFeedRef.current.scrollTop + postFeedRef.current.clientHeight ===
+        postFeedRef.current.scrollHeight &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
       fetchNextPage();
     }
   };
 
-  console.log("data:", data);
+  const handleRefresh = () => {
+    fetchNextPage();
+  };
 
   return (
     <div
       className="flex flex-col h-full overflow-y-auto"
       onScroll={handleScroll}
+      ref={postFeedRef}
     >
-      {isLoading ? (
+      {isLoading || isFetchingNextPage ? (
         <>
           {[...Array(PAGE_SIZE)].map((_, index) => (
             <PostSkeleton key={index} />
@@ -49,7 +75,13 @@ export default function PostFeed() {
       ) : (
         <>
           {data.pages.map((page) =>
-            page.data.map((post) => <Post key={post.userId} post={post} />)
+            page.data.map((post) => (
+              <Post
+                key={post.userId}
+                post={post}
+                isFetchingNextPage={isFetchingNextPage}
+              />
+            ))
           )}
 
           {/* {!isLoading && !isFetching && hasNextPage && (
@@ -59,15 +91,15 @@ export default function PostFeed() {
             >
               Load More
             </button>
-          )}
+          )} */}
           {!isLoading && !isFetching && !hasNextPage && (
             <button
               className="p-4 bg-gray-100 text-gray-800 w-full text-center"
               onClick={handleRefresh}
             >
-              Refresh
+              Load More
             </button>
-          )} */}
+          )}
         </>
       )}
     </div>

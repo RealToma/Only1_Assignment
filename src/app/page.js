@@ -29,7 +29,7 @@ export default function Home() {
     <QueryClientProvider client={queryClient}>
       <div className="flex flex-col min-h-screen">
         <header className="py-4 bg-gray-900 text-white text-center">
-          <h1 className="text-2xl font-bold">Post Feed</h1>
+          <h1 className="text-2xl font-bold">Only1 - Post Feed</h1>
         </header>
         <main className="flex-1">
           <Suspense fallback={<PostSkeleton />}>
@@ -47,7 +47,9 @@ export default function Home() {
         </button>
         {modalOpen && (
           <Modal onClose={handleCloseModal}>
-            <h2 className="text-xl font-bold">New Post</h2>
+            <h2 className="text-xl font-bold mb-3">New Post</h2>
+            <NewPostForm />
+
             {/* Add your new post form here */}
           </Modal>
         )}
@@ -81,7 +83,7 @@ function NewPostForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
+    <form onSubmit={handleSubmit}>
       {isError && (
         <div className="bg-red-500 text-white p-2 rounded mb-4">
           Error creating post. Please try again.
@@ -91,7 +93,7 @@ function NewPostForm() {
         value={postContent}
         onChange={(e) => setPostContent(e.target.value)}
         disabled={isLoading}
-        className="w-full p-2 mb-4"
+        className="w-full p-2 mb-4 border-2  rounded"
         rows={4}
         placeholder="Enter your post content..."
       ></textarea>
