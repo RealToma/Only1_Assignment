@@ -1,7 +1,34 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import Modal from "./Modal";
+import { useRouter } from "next/navigation";
 
 const Post = ({ post, isFetchingNextPage }) => {
+  const router = useRouter();
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
+  const [flagDeletePost, setFlagDeletePost] = useState(false);
+
+  const handleCloseModalDelete = () => {
+    setModalDeleteOpen(false);
+  };
+
+  const handleModalDelete = () => {
+    setModalDeleteOpen(true);
+  };
+
+  const handleDeletePost = () => {
+    handleCloseModalDelete();
+    setFlagDeletePost(1);
+
+    setTimeout(() => {
+      setFlagDeletePost(2);
+      setTimeout(() => {
+        setFlagDeletePost(0);
+        router.reload();
+      }, 2000);
+    }, 2000);
+  };
+
   return (
     <div
       key={post.userId}
@@ -80,6 +107,7 @@ const Post = ({ post, isFetchingNextPage }) => {
                         (active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                         "block px-4 py-2 text-sm")
                       }
+                      onClick={() => handleModalDelete()}
                     >
                       Delete
                     </a>
@@ -91,13 +119,15 @@ const Post = ({ post, isFetchingNextPage }) => {
         </Menu>
         {/* Confirmation modal */}
       </div>
-      {post.isDeleting ? (
+      {flagDeletePost === 1 ? (
         <div className="flex items-center justify-center">
           <div className="w-6 h-6 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
-          <span className="ml-2">Deleting post...</span>
+          <span className="ml-2">Deleting this post...</span>
         </div>
-      ) : post.isDeleted ? (
-        <p>Post deleted</p>
+      ) : flagDeletePost === 2 ? (
+        <div className="flex items-center justify-center">
+          <span className="ml-2">Deleted successfully!</span>
+        </div>
       ) : (
         <>
           {post.isCurrentUser ? (
@@ -107,6 +137,27 @@ const Post = ({ post, isFetchingNextPage }) => {
             </>
           ) : null}
         </>
+      )}
+      {modalDeleteOpen && (
+        <Modal onClose={handleCloseModalDelete}>
+          <h2 className="text-xl font-bold mb-[20px]">Are you sure?</h2>
+
+          {/* Add your new post form here */}
+          <div className="flex space-x-4">
+            <button
+              className="flex-1 w-[100px] bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              onClick={handleDeletePost}
+            >
+              Yes
+            </button>
+            <button
+              className="flex-1 w-[100px] bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+              onClick={handleCloseModalDelete}
+            >
+              No
+            </button>
+          </div>
+        </Modal>
       )}
     </div>
   );
