@@ -1,76 +1,75 @@
 import React from "react";
 import { useInfiniteQuery } from "react-query";
-import { useInView } from "react-intersection-observer";
-
-import Post from "./Post";
 import PostSkeleton from "./PostSkeleton";
+import Post from "./Post";
 
-const fetchPosts = async (key, page = 0) => {
-  // Simulate a delay of 1 second to load posts
+const PAGE_SIZE = 10;
 
+const fetchPosts = async (key, nextPage = 0) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Fetch posts from the server using pagination
+  const response = await fetch(
+    `/api/posts?pageSize=${PAGE_SIZE}&page=${nextPage}`
+  );
+  const data = await response.json();
 
-  // Replace this with your actual API call to fetch posts
-  const res = await fetch(`/api/posts?page=${page}`);
-  const data = await res.json();
   return data;
 };
 
-const PostFeed = ({ onPostClick }) => {
-  const { data, isLoading, isFetchingMore, fetchMore, canFetchMore } =
-    useInfiniteQuery("posts", fetchPosts, {
-      getFetchMore: (lastGroup, allGroups) =>
-        lastGroup.length ? allGroups.length : null,
-      refetchOnWindowFocus: false,
-      retryOnMount: false,
-    });
+export default function PostFeed() {
+  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
+    "posts",
+    fetchPosts,
+    {
+      getNextPageParam: (lastPage) =>
+        lastPage.hasNextPage ? lastPage.nextPage : null,
+    }
+  );
 
-  const [ref, inView] = useInView();
-
-  const posts = data ? data.flat() : [];
-
-  const handleLoadMore = () => {
-    if (!isFetchingMore && canFetchMore) {
-      fetchMore();
+  const handleScroll = (event) => {
+    const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight && hasNextPage) {
+      fetchNextPage();
     }
   };
 
+  console.log("data:", data);
+
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex-1 overflow-y-auto">
-        {isLoading ? (
-          <React.Suspense fallback={<PostSkeleton />}>
-            {[...Array(5)].map((_, index) => (
-              <PostSkeleton key={index} />
-            ))}
-          </React.Suspense>
-        ) : (
-          <>
-            {posts.map((post) => (
-              <Post
-                key={post.id}
-                post={post}
-                onClick={() => onPostClick(post)}
-              />
-            ))}
-            {isFetchingMore && <PostSkeleton />}
-            {!isFetchingMore && canFetchMore && (
-              <div ref={ref} className="mt-4">
-                {inView && (
-                  <button
-                    className="w-full py-2 bg-gray-100 text-gray-600 font-medium"
-                    onClick={handleLoadMore}
-                  >
-                    Load More
-                  </button>
-                )}
-              </div>
-            )}
-          </>
-        )}
-      </div>
+    <div
+      className="flex flex-col h-full overflow-y-auto"
+      onScroll={handleScroll}
+    >
+      {isLoading ? (
+        <>
+          {[...Array(PAGE_SIZE)].map((_, index) => (
+            <PostSkeleton key={index} />
+          ))}
+        </>
+      ) : (
+        <>
+          {data.pages.map((page) =>
+            page.data.map((post) => <Post key={post.userId} post={post} />)
+          )}
+
+          {/* {!isLoading && !isFetching && hasNextPage && (
+            <button
+              className="p-4 bg-gray-100 text-gray-800 w-full text-center"
+              onClick={handleLoadMore}
+            >
+              Load More
+            </button>
+          )}
+          {!isLoading && !isFetching && !hasNextPage && (
+            <button
+              className="p-4 bg-gray-100 text-gray-800 w-full text-center"
+              onClick={handleRefresh}
+            >
+              Refresh
+            </button>
+          )} */}
+        </>
+      )}
     </div>
   );
-};
-
-export default PostFeed;
+}
