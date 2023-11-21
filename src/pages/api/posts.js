@@ -48,33 +48,3 @@ export default async function handler(req, res) {
     });
   }
 }
-
-// import { faker } from "@faker-js/faker";
-
-// const generatePosts = (count) => {
-//   const posts = [];
-//   for (let i = 0; i < count; i++) {
-//     const post = {
-//       userId: faker.string.uuid(),
-//       author: faker.internet.userName(),
-//       title: faker.lorem.sentence(),
-//       content: faker.lorem.paragraphs(),
-//       createdAt: faker.date.past(),
-//     };
-//     posts.push(post);
-//   }
-
-//   return posts;
-// };
-
-// export default function handler(req, res) {
-//   const { pageSize, page } = req.query;
-
-//   // Generate random posts based on the requested page and page size
-//   const posts = generatePosts(pageSize * page);
-
-//   // Slice the posts based on the requested page size
-//   const slicedPosts = posts.slice(pageSize * (page - 1), pageSize * page);
-
-//   res.status(200).json({ posts: slicedPosts });
-// }

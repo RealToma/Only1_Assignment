@@ -1,10 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Modal from "./Modal";
-import { useRouter } from "next/navigation";
 
 const Post = ({ post, isFetchingNextPage }) => {
-  const router = useRouter();
   const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
   const [flagDeletePost, setFlagDeletePost] = useState(false);
 
@@ -24,7 +22,7 @@ const Post = ({ post, isFetchingNextPage }) => {
       setFlagDeletePost(2);
       setTimeout(() => {
         setFlagDeletePost(0);
-        router.reload();
+        window.location.reload();
       }, 2000);
     }, 2000);
   };

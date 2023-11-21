@@ -7,6 +7,7 @@ const PAGE_SIZE = 10;
 
 const fetchPosts = async (key, nextPage = 0) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
+
   // Fetch posts from the server using pagination
   const response = await fetch(
     `/api/posts?pageSize=${PAGE_SIZE}&page=${nextPage}`
@@ -83,15 +84,6 @@ export default function PostFeed() {
               />
             ))
           )}
-
-          {/* {!isLoading && !isFetching && hasNextPage && (
-            <button
-              className="p-4 bg-gray-100 text-gray-800 w-full text-center"
-              onClick={handleLoadMore}
-            >
-              Load More
-            </button>
-          )} */}
           {!isLoading && !isFetching && !hasNextPage && (
             <button
               className="p-4 bg-gray-100 text-gray-800 w-full text-center"
