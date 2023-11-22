@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Modal from "./Modal";
+import { useMediaQuery } from "react-responsive";
 
 const Post = ({ post, isFetchingNextPage }) => {
   const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
   const [flagDeletePost, setFlagDeletePost] = useState(false);
+  const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
 
   const handleCloseModalDelete = () => {
     setModalDeleteOpen(false);
@@ -32,7 +34,7 @@ const Post = ({ post, isFetchingNextPage }) => {
       key={post.userId}
       className={`p-4 border-b cursor-pointer hover:bg-gray-300 ${
         isFetchingNextPage ? "opacity-50" : ""
-      }`}
+      } ${!isMobile ? "text-center" : "text-left"}`}
     >
       <p className="text-gray-800 mb-3">Title: {post.title}</p>
       <p className="text-gray-400 text-sm">

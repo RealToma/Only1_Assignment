@@ -17,7 +17,7 @@ const fetchPosts = async (key, nextPage = 0) => {
   return data;
 };
 
-export default function PostFeed() {
+export default function PostFeed({ postTitle, postContent, postDate }) {
   const {
     data,
     fetchNextPage,

@@ -12,6 +12,7 @@ import Modal from "../components/Modal";
 import PostFeed from "../components/PostFeed";
 import PostSkeleton from "../components/PostSkeleton";
 import { NewPostForm } from "@/components/CreatePost";
+import { ToastContainer } from "react-toastify";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,9 @@ export const PostContext = React.createContext();
 
 export default function Home() {
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [postTitle, setPostTitle] = React.useState("");
+  const [postContent, setPostContent] = React.useState("");
+  const [postDate, setPostDate] = React.useState("");
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -32,7 +36,11 @@ export default function Home() {
         </header>
         <main className="flex-1">
           <Suspense fallback={<PostSkeleton />}>
-            <PostFeed />
+            <PostFeed
+              postTitle={postTitle}
+              postContent={postContent}
+              postDate={postDate}
+            />
           </Suspense>
         </main>
         <button
@@ -44,10 +52,29 @@ export default function Home() {
         {modalOpen && (
           <Modal onClose={handleCloseModal}>
             <h2 className="text-xl font-bold mb-3">New Post</h2>
-            <NewPostForm />
+            <NewPostForm
+              postTitle={postTitle}
+              setPostTitle={setPostTitle}
+              postContent={postContent}
+              setPostContent={setPostContent}
+              setPostDate={setPostDate}
+              handleCloseModal={handleCloseModal}
+            />
           </Modal>
         )}
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="colored"
+      />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
