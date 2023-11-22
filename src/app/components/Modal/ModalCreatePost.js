@@ -1,9 +1,11 @@
 import React from "react";
 import { useMediaQuery } from "react-responsive";
 import { Transition } from "@headlessui/react";
+import { useRouter } from "next/navigation";
 
-const Modal = ({ children, onClose }) => {
+const ModalCreatePost = ({ children, onClose }) => {
   const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
+  const router = useRouter();
 
   return (
     <Transition.Root show={true} as={React.Fragment}>
@@ -28,7 +30,9 @@ const Modal = ({ children, onClose }) => {
           >
             <button
               className="absolute top-[10px] right-[10px] p-4"
-              onClick={onClose}
+              onClick={() => {
+                router.back();
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -37,9 +41,9 @@ const Modal = ({ children, onClose }) => {
                 className="w-6 h-6 text-gray-600"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M11.414 10l4.293-4.293a1 1 0 00-1.414-1.414L10 8.586 5.707 4.293a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 101.414 1.414L10 11.414l4.293 4.293a1 1 0 001.414-1.414L11.414 10z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
             </button>
@@ -51,4 +55,4 @@ const Modal = ({ children, onClose }) => {
   );
 };
 
-export default Modal;
+export default ModalCreatePost;

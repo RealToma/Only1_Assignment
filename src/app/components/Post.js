@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import Modal from "./Modal";
+import Modal from "./Modal/ModalCreatePost";
 import { useMediaQuery } from "react-responsive";
 
 const Post = ({ post, isFetchingNextPage }) => {
@@ -25,7 +25,7 @@ const Post = ({ post, isFetchingNextPage }) => {
       setTimeout(() => {
         setFlagDeletePost(0);
         window.location.reload();
-      }, 2000);
+      }, 1000);
     }, 2000);
   };
 

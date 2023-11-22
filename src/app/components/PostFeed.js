@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 import { useInfiniteQuery } from "react-query";
 import PostSkeleton from "./PostSkeleton";
 import Post from "./Post";
+import { RefContext } from "../Context/ContextProvider";
 
 const PAGE_SIZE = 10;
 
@@ -17,7 +18,8 @@ const fetchPosts = async (key, nextPage = 0) => {
   return data;
 };
 
-export default function PostFeed({ postTitle, postContent, postDate }) {
+export default function PostFeed() {
+  const { postTitle, postContent, postDate } = useContext(RefContext);
   const {
     data,
     fetchNextPage,
