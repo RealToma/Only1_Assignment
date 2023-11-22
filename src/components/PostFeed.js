@@ -75,15 +75,36 @@ export default function PostFeed({ postTitle, postContent, postDate }) {
         </>
       ) : (
         <>
-          {data.pages.map((page) =>
-            page.data.map((post) => (
-              <Post
-                key={post.userId}
-                post={post}
-                isFetchingNextPage={isFetchingNextPage}
-              />
-            ))
-          )}
+          {data.pages.map((page) => {
+            let arrayPost = [];
+            let newPost;
+            if (postTitle === "" || postContent === "") {
+              arrayPost = [...page.data];
+            } else {
+              let temp = [...page.data];
+              newPost = {
+                author: "Thomas Ken",
+                content: postContent,
+                createdAt: postDate,
+                title: postTitle,
+                userId: "thomas.ken0114",
+              };
+              temp.push(newPost);
+              arrayPost = [...temp];
+            }
+
+            console.log("arrayPost:", arrayPost);
+
+            return arrayPost
+              .reverse()
+              .map((post) => (
+                <Post
+                  key={post.userId}
+                  post={post}
+                  isFetchingNextPage={isFetchingNextPage}
+                />
+              ));
+          })}
           {!isLoading && !isFetching && !hasNextPage && (
             <button
               className="p-4 bg-gray-100 text-gray-800 w-full text-center"

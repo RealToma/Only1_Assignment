@@ -37,9 +37,9 @@ const Modal = ({ children, onClose }) => {
                 className="w-6 h-6 text-gray-600"
               >
                 <path
-                  fillRule="evenodd"
+                  fill-rule="evenodd"
                   d="M11.414 10l4.293-4.293a1 1 0 00-1.414-1.414L10 8.586 5.707 4.293a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 101.414 1.414L10 11.414l4.293 4.293a1 1 0 001.414-1.414L11.414 10z"
-                  clipRule="evenodd"
+                  clip-rule="evenodd"
                 />
               </svg>
             </button>

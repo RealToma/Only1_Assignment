@@ -53,9 +53,7 @@ export default function Home() {
           <Modal onClose={handleCloseModal}>
             <h2 className="text-xl font-bold mb-3">New Post</h2>
             <NewPostForm
-              postTitle={postTitle}
               setPostTitle={setPostTitle}
-              postContent={postContent}
               setPostContent={setPostContent}
               setPostDate={setPostDate}
               handleCloseModal={handleCloseModal}

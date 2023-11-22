@@ -3,23 +3,24 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const NewPostForm = ({
-  postTitle,
   setPostTitle,
-  postContent,
   setPostContent,
   handleCloseModal,
-  setPostDate
+  setPostDate,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
 
+  const [title, setTitle] = React.useState("");
+  const [content, setContent] = React.useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (postTitle === "") {
+    if (title === "") {
       toast.error("Enter post title.");
       return;
     }
-    if (postContent === "") {
+    if (content === "") {
       toast.error("Enter post content.");
       return;
     }
@@ -32,8 +33,8 @@ export const NewPostForm = ({
     if (randomError) {
       setIsError(true);
       setTimeout(() => {
-        setPostContent("");
-        setPostTitle("");
+        setContent("");
+        setTitle("");
         setIsError(false);
         setIsLoading(false);
       }, 2000);
@@ -42,6 +43,13 @@ export const NewPostForm = ({
       toast.success("Created new post.");
       handleCloseModal();
       setIsLoading(false);
+      setPostTitle(title);
+      setPostContent(content);
+      // get current time based on EST
+      const date = new Date();
+      const options = { timeZone: "America/New_York", hour12: false };
+      const estTime = date.toLocaleString("en-US", options);
+      setPostDate(estTime);
     }
   };
 
@@ -53,15 +61,15 @@ export const NewPostForm = ({
         </div>
       )}
       <input
-        value={postTitle}
-        onChange={(e) => setPostTitle(e.target.value)}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
         disabled={isLoading}
         className="w-full p-2 mb-4 border-2  rounded"
         placeholder="Enter your post title."
       ></input>
       <textarea
-        value={postContent}
-        onChange={(e) => setPostContent(e.target.value)}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
         disabled={isLoading}
         className="w-full p-2 mb-4 border-2  rounded"
         rows={5}
