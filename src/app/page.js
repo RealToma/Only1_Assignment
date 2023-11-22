@@ -1,16 +1,10 @@
 "use client";
 import React, { Suspense } from "react";
-import {
-  QueryClient,
-  QueryClientProvider,
-  // useQuery,
-  // useMutation,
-} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import PostFeed from "./components/PostFeed";
 import PostSkeleton from "./components/PostSkeleton";
-import { ToastContainer } from "react-toastify";
 import Link from "next/link";
 
 const queryClient = new QueryClient();
@@ -35,18 +29,7 @@ export default function Home() {
           </Link>
         </button>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        pauseOnHover
-        theme="colored"
-      />
+
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

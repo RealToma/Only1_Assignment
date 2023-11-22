@@ -2,7 +2,7 @@
 
 import React, { useState, useContext } from "react";
 import { RefContext } from "../Context/ContextProvider";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ModalCreatePost from "../components/Modal/ModalCreatePost";
 import { useRouter } from "next/navigation";
@@ -87,6 +87,18 @@ const CreateNewPost = () => {
       >
         {isLoading ? "Creating..." : "Create Post"}
       </button>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="colored"
+      />
     </ModalCreatePost>
   );
 };
